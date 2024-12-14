@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Rasa</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat { width: 300px; margin: auto; border: 1px solid #ccc; padding: 10px; }
+        .message { margin: 5px 0; }
+        .user { color: blue; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Type a message..." autofocus />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const userMessage = inputField.value;
+            displayMessage("user", userMessage);
+            inputField.value = "";
+
+            // Send user message to Rasa
+            try {
+                const response = await fetch("http://localhost:5005/webhooks/rest/webhook", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sender: "user", message: userMessage })
+                });
+                const data = await response.json();
+                
+                // Display bot responses
+                data.forEach((msg) => displayMessage("bot", msg.text));
+            } catch (error) {
+                console.error("Error:", error);
+                displayMessage("bot", "Error: Could not connect to Rasa server.");
+            }
+        }
+
+        function displayMessage(sender, message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender);
+            messageDiv.textContent = sender === "user" ? `You: ${message}` : `Bot: ${message}`;
+            document.getElementById("messages").appendChild(messageDiv);
+        }
+    </script>
+</body>
+</html>

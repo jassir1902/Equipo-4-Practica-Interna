@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  rasa:
+    image: rasa/rasa:3.6.20
+    container_name: rasa
+    volumes:
+      - ./:/app
+    ports:
+      - "5005:5005"
+    command: ["run", "--enable-api", "--cors", "*"]
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=123
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  grafana_data:

@@ -1,0 +1,6 @@
+action_endpoint:
+  url: "http://localhost:5055/webhook"
+
+metrics:
+  enable: true
+  port: 9091

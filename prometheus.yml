@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'rasa'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['rasa:9091']
