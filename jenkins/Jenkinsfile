@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clonar Repositorio') {
+            steps {
+                git 'https://github.com/jassir1902/Equipo-4-Practica-Interna'
+            }
+        }
+        stage('Construir') {
+            steps {
+                script {
+                    sh 'docker-compose build'
+                }
+            }
+        }
+        stage('Ejecutar Pruebas') {
+            steps {
+                script {
+                    sh 'docker-compose run rasa python -m unittest discover tests'
+                }
+            }
+        }
+        stage('Desplegar') {
+            steps {
+                script {
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+    }
+}

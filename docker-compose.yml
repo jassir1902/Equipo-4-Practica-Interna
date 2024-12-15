@@ -1,7 +1,20 @@
 version: '3.7'
 services:
+  jenkins:
+    build:
+      context: ./jenkins # Ruta al directorio donde se encuentra el Dockerfile de Jenkins
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+
   rasa:
-    image: rasa/rasa:3.6.20
+    build:
+      context: .  # Ruta al directorio donde se encuentra el Dockerfile de Rasa
     container_name: rasa
     volumes:
       - ./:/app
@@ -29,3 +42,4 @@ services:
 
 volumes:
   grafana_data:
+  jenkins_home:
