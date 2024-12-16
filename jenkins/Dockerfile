@@ -10,5 +10,14 @@ RUN jenkins-plugin-cli --plugins \
     blueocean \
     credentials-binding
 
-# Volver al usuario jenkins
+# Instalar Docker y Docker Compose
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    docker-compose && \
+    apt-get clean
+
+# Agregar al usuario Jenkins al grupo docker para acceso a Docker
+RUN usermod -aG docker jenkins
+
+# Volver al usuario Jenkins
 USER jenkins
